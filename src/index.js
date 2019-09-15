@@ -14,9 +14,11 @@ const token = '492c56cae16fdf7eeba99d11130e687a';
 
 export default class App extends Component {
   state = {
-    loggedInUser: 'teste',
     errorMessage: null,
     results: [],
+    poster_path: null,
+    title: null,
+    overview: null,
   };
 /*
   signIn = async () => {
@@ -58,6 +60,24 @@ export default class App extends Component {
     }
   };
 
+  getIdicaFilme = async () => {
+    try {
+      this.results = null
+
+      let page = Math.floor(Math.random() * 500);
+      let num = Math.floor(Math.random() * 20);
+      response = await api.get('/movie/popular?api_key='+token+'&language=pt-BR&page='+page);
+
+      const { poster_path, title , overview  } = response.data.results[num];
+
+      this.setState({ poster_path, title, overview });
+      
+    } 
+    catch (err){
+      this.setState({ errorMessage: err.errorMessage });
+    }
+  };
+
   async componentDidMount() {
     await AsyncStorage.clear();
     
@@ -68,29 +88,54 @@ export default class App extends Component {
     return (
       <>
       <StatusBar barStyle="ligth-content" backgroundColor="black" />
-        <View style={styles.container}>          
+        <View style={styles.fundoblack} />
+        <ImageBackground style={styles.container} source={require('./img/fundo.jpg')} />   
+        
+
+
           <Container>
+
             <TabsContainer> 
-              { this.state.results.map(result => (
-                <TabItem>
-                <View key={result.id}>
+              { !this.state.poster_path && this.state.results.map(result => (
+                <TabItem key={result.id}>
+                <View >
                   <ImageBackground
                     style={styles.stretch}
-                    source={{uri: 'https://image.tmdb.org/t/p/w400'+result.poster_path }}>
-                    <View style={styles.opacidade}></View>
-
-                    <TabText style={{ fontWeight: 'bold'}}>{result.title}</TabText>
-                    <TabText>{result.overview}</TabText>
+                    source={{uri: 'https://image.tmdb.org/t/p/w300'+result.poster_path }}>
 
                   </ImageBackground>
-
 
                 </View>
                 </TabItem>
               ))}
+
+
             </TabsContainer> 
+            { this.state.poster_path ?  
+
+              <View style={styles.imgIndicacao}>
+                <ImageBackground
+                style={styles.stretch}
+                source={{uri: 'https://image.tmdb.org/t/p/w300'+this.state.poster_path }}>
+                            
+                </ImageBackground>
+
+              </View>
+
+          : false}
           </Container>
-        </View>
+
+
+           <View style={styles.btnIndicacao}>
+          <Button
+            title="Indique-me um filme"
+            color="green"
+            onPress={
+              this.getIdicaFilme
+            }
+            />  
+          </View>
+
         </>
     );
   }
@@ -98,10 +143,11 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    width: '100%' ,
+    height: '100%' ,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
+    opacity: 0.2,
   },
   stretch: {
     width: '100%',
@@ -112,8 +158,31 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%' ,
     height: '100%' ,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fundoblack:{
+    position: 'absolute',
+    width: '100%' ,
+    height: '100%' ,
     backgroundColor: 'black',
-    opacity: 0.5,
+  }, 
+  btnIndicacao:{
+    marginTop: 60,
+    marginLeft: 30,
+    marginRight:30,
     
-  }
+  },
+  imgIndicacao: {
+
+    width: 233,
+    height: 300,
+    marginLeft: 90,
+    },
+    title: {
+      color: 'white',
+      fontSize: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }
 });

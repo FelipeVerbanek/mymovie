@@ -1,8 +1,9 @@
 import styled from 'styled-components/native';
 import { View, Image, StyleSheet } from 'react-native';
 export const Container = styled.View`
-    height: 700px;
-    margin-top: 5px;
+    height: 300px;
+    margin-top:  150px;
+
 `;
 
 export const TabsContainer = styled.ScrollView.attrs({
@@ -11,11 +12,11 @@ export const TabsContainer = styled.ScrollView.attrs({
     showsHorizontalScrollIndicator: false
 })``;
 export const TabItem = styled.View`
-  width: 393px;
-  height: 700px;
+  width: 233px;
+  height: 300px;
   background: black;
   border-radius: 3px;
-  margin-left: 5px;
+  margin-left: 10px;
   justify-content: space-between;
   `;
 export const TabText = styled.Text`
